@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Bezier</title>
+    <link href="spiroche.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+    <div id="div">
+        <form id="form" action="#" method="get">
+            <input type="button" id="clear" value="Clear" />
+            <input type="button" id="reset" value="Reset" />
+            <label for="lineLength">Line Length:</label>
+            <input type="range" id="lineLength" min="20" max="1000" />
+            <label for="minimumLineSeparation">Minimum Line Separation:</label>
+            <input type="range" id="minimumLineSeparation" min="1" max="50"/>
+            <label for="angleDivisor">Angle Divisor:</label>
+            <input type="range" id="angleDivisor" min="1" max="1000"/>
+            <input type="color" id="color" />
+        </form>
+    </div>
+    <script src="spiroche.js"></script>
+</body>
+</html>
