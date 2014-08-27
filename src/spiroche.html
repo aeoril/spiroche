@@ -5,7 +5,12 @@
     <link href="spiroche.css" rel="stylesheet" type="text/css">
 </head>
 <body>
-<canvas id="canvas"></canvas>
+    <canvas id="canvas" contextmenu="canvasMenu">
+        <menu id="canvasMenu" type="context">
+            <menuitem id="menuClear" label="Clear"></menuitem>
+            <menuitem id="menuReset" label="Reset"></menuitem>
+        </menu>
+    </canvas>
 <div id="div">
     <form id="form" action="#" method="get">
         <input type="button" id="clear" value="Clear" />
@@ -15,7 +20,7 @@
         <label for="minimumLineSeparation">Minimum Line Separation:</label>
         <input type="range" id="minimumLineSeparation" min="1" max="30"/>
         <label for="angleDivisor">Angle Divisor:</label>
-        <input type="range" id="angleDivisor" min="1" max="500"/>
+        <input type="range" id="angleDivisor" min="1" max="700"/>
         <label for="color">Color Picker:</label>
         <input type="color" id="color" />
     </form>

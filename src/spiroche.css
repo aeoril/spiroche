@@ -13,5 +13,13 @@ label {
 }
 input[type="range"] {
     vertical-align: bottom;
-    width: 15%;
+}
+#lineLength {
+    width: 12%
+}
+#minimumLineSeparation {
+    width: 8%
+}
+#angleDivisor {
+    width: 16%
 }

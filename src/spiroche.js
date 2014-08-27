@@ -16,6 +16,8 @@
         minimumLineSeparation,
         angleDivisor,
         color,
+        menuClearElem,
+        menuResetElem,
         divElem,
         clearElem,
         resetElem,
@@ -153,12 +155,16 @@
         colorChange();
     }
     window.addEventListener('load', function () {
+        menuClearElem = document.getElementById('menuClear');
+        menuResetElem = document.getElementById('menuReset');
         divElem = document.getElementById('div');
         clearElem = document.getElementById('clear');
         resetElem = document.getElementById('reset');
         lineLengthElem = document.getElementById('lineLength');
         minimumLineSeparationElem = document.getElementById('minimumLineSeparation');
         angleDivisorElem = document.getElementById('angleDivisor');
+        menuClearElem.addEventListener('click', clear, false);
+        menuResetElem.addEventListener('click', reset, false);
         colorElem = document.getElementById('color');
         clearElem.addEventListener('click', clear, false);
         resetElem.addEventListener('click', reset, false);
@@ -174,6 +180,9 @@
         canvasElem.addEventListener('mousemove', mouseMove, false);
         canvasElem.addEventListener('mouseup', mouseUp, false);
         canvasElem.addEventListener('mouseleave', mouseUp, false);
+        canvasElem.addEventListener('touchstart', mouseDown, false);
+        canvasElem.addEventListener('touchmove', mouseMove, false);
+        canvasElem.addEventListener('touchend', mouseUp, false);
         window.addEventListener('resize', resize, false);
     }, false);
 }());
