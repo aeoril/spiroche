@@ -8,7 +8,10 @@
     var LINE_LENGTH = 200,
         MINIMUM_LINE_SEPARATION = 6,
         ANGLE_DIVISOR = 300,
-        COLOR='rgb(1, 1, 1)',
+        BLACK='rgb(0, 0, 0)',
+        GRAY = 'rgb(100, 100, 100)',
+        FONT = 'normal 30pt "Droid Sans", sans-serif',
+        INSTRUCTIONS = 'Click and drag mouse in this space to draw',
         lineLength,
         minimumLineSeparation,
         angleDivisor,
@@ -26,6 +29,7 @@
         mousePos = null,
         prevMousePos,
         mouseIsDown = false,
+        clean = true,
         startingPointAngle;
 
     function calcDistance(point1, point2) {
@@ -84,6 +88,10 @@
             context.moveTo(points.point1.x, points.point1.y);
             context.lineTo(points.point2.x, points.point2.y);
             context.stroke();
+            if (clean) {
+                clean = false;
+                context.clearRect(0, 0, canvasElem.width, canvasElem.height);
+            }
         }
     }
     function mouseDown(e) {
@@ -95,16 +103,32 @@
     function mouseUp() {
         mouseIsDown = false;
     }
+    function drawInstructions() {
+        context.save();
+        context.fillStyle = GRAY;
+        context.font = FONT;
+        context.fillText(INSTRUCTIONS, (canvasElem.width - context.measureText(INSTRUCTIONS).width) / 2,
+            canvasElem.height / 2);
+        context.restore();
+    }
     function resize() {
-        var imageData = context.getImageData(0, 0, canvasElem.width, canvasElem.height);
+        var imageData;
 
-        canvasElem.width = window.innerWidth;
-        canvasElem.height = window.innerHeight - divElem.offsetHeight;
-
-        context.putImageData(imageData, 0, 0);
+        if (clean) {
+            canvasElem.width = window.innerWidth;
+            canvasElem.height = window.innerHeight - divElem.offsetHeight;
+            drawInstructions();
+        } else {
+            imageData = context.getImageData(0, 0, canvasElem.width, canvasElem.height);
+            canvasElem.width = window.innerWidth;
+            canvasElem.height = window.innerHeight - divElem.offsetHeight;
+            context.putImageData(imageData, 0, 0);
+        }
     }
     function clear() {
+        clean = true;
         context.clearRect(0, 0, canvasElem.width, canvasElem.height);
+        drawInstructions();
     }
     function lineLengthChange() {
         lineLength = lineLengthElem.value;
@@ -122,7 +146,7 @@
         lineLengthElem.value = LINE_LENGTH;
         minimumLineSeparationElem.value = MINIMUM_LINE_SEPARATION;
         angleDivisorElem.value = ANGLE_DIVISOR;
-        colorElem.value = COLOR;
+        colorElem.value = BLACK;
         lineLengthChange();
         minimumLineSeparationChange();
         angleDivisorChange();
@@ -144,12 +168,12 @@
         colorElem.addEventListener('change', colorChange, false);
         canvasElem = document.getElementById('canvas');
         context = canvasElem.getContext('2d');
+        resize();
+        reset();
         canvasElem.addEventListener('mousedown', mouseDown, false);
         canvasElem.addEventListener('mousemove', mouseMove, false);
         canvasElem.addEventListener('mouseup', mouseUp, false);
         canvasElem.addEventListener('mouseleave', mouseUp, false);
-        resize();
-        reset();
         window.addEventListener('resize', resize, false);
     }, false);
 }());
