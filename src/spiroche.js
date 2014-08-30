@@ -18,7 +18,6 @@
         color,
         menuClearElem,
         menuResetElem,
-        divElem,
         clearElem,
         resetElem,
         lineLengthElem,
@@ -40,19 +39,28 @@
 
         return Math.sqrt(deltaX * deltaX + deltaY * deltaY);
     }
-    function calcMousePos(e) {
+    function calcMousePos(e, element, isTouch) {
         var top = 0,
             left = 0,
-            obj = canvasElem;
+            mousePos = {};
 
+        if (isTouch) {
+            mousePos.x = e.targetTouches[0].pageX - element.offsetLeft;
+            mousePos.y = e.targetTouches[0].pageY - element.offsetTop;
+            return mousePos;
+        }
         // get canvas position
-        while (obj.tagName != 'BODY') {
-            top += obj.offsetTop;
-            left += obj.offsetLeft;
-            obj = obj.offsetParent;
+        while (element.tagName != 'BODY') {
+
+            top += element.offsetTop;
+            left += element.offsetLeft;
+
+            element = element.offsetParent;
         }
         // return relative mouse position
-        return {x: e.clientX - left + window.pageXOffset, y: e.clientY - top + window.pageYOffset};
+        mousePos.x = e.clientX - left + window.pageXOffset;
+        mousePos.y = e.clientY - top + window.pageYOffset;
+        return mousePos;
     }
     function fromPolar(mag, angle) {
         return {x: Math.cos(angle) * mag, y: Math.sin(angle) * mag};
@@ -66,14 +74,17 @@
         return {point1: {x: point.x + point1.x, y: point.y + point1.y},
             point2: {x: point.x + point2.x, y: point.y + point2.y}};
     }
-    function mouseMove(e) {
+    function mouseMove(e, isTouch) {
         var newMousePos,
             points;
 
+        if (isTouch) {
+            e.preventDefault();
+        }
         if (!mouseIsDown) {
             return;
         }
-        newMousePos = calcMousePos(e);
+        newMousePos = calcMousePos(e, canvasElem, isTouch);
         if (calcDistance(newMousePos, mousePos) < minimumLineSeparation) {
             return;
         }
@@ -96,14 +107,20 @@
             }
         }
     }
-    function mouseDown(e) {
-        mouseDownPos = calcMousePos(e);
+    function mouseDown(e, isTouch) {
+        mouseDownPos = calcMousePos(e, canvasElem, isTouch);
         mouseIsDown = true;
         mousePos = mouseDownPos;
         startingPointAngle = 0;
+        if (isTouch) {
+            e.preventDefault();
+        }
     }
-    function mouseUp() {
+    function mouseUp(e, isTouch) {
         mouseIsDown = false;
+        if (isTouch) {
+            e.preventDefault();
+        }
     }
     function drawInstructions() {
         context.save();
@@ -113,20 +130,20 @@
             canvasElem.height / 2);
         context.restore();
     }
-    function resize() {
-        var imageData;
-
-        if (clean) {
-            canvasElem.width = window.innerWidth;
-            canvasElem.height = window.innerHeight - divElem.offsetHeight;
-            drawInstructions();
-        } else {
-            imageData = context.getImageData(0, 0, canvasElem.width, canvasElem.height);
-            canvasElem.width = window.innerWidth;
-            canvasElem.height = window.innerHeight - divElem.offsetHeight;
-            context.putImageData(imageData, 0, 0);
-        }
-    }
+//    function resize() {
+//        var imageData;
+//
+//        if (clean) {
+//            canvasElem.width = window.innerWidth;
+//            canvasElem.height = window.innerHeight - divElem.offsetHeight;
+//            drawInstructions();
+//        } else {
+//            imageData = context.getImageData(0, 0, canvasElem.width, canvasElem.height);
+//            canvasElem.width = window.innerWidth;
+//            canvasElem.height = window.innerHeight - divElem.offsetHeight;
+//            context.putImageData(imageData, 0, 0);
+//        }
+//    }
     function clear() {
         clean = true;
         context.clearRect(0, 0, canvasElem.width, canvasElem.height);
@@ -157,7 +174,6 @@
     window.addEventListener('load', function () {
         menuClearElem = document.getElementById('menuClear');
         menuResetElem = document.getElementById('menuReset');
-        divElem = document.getElementById('div');
         clearElem = document.getElementById('clear');
         resetElem = document.getElementById('reset');
         lineLengthElem = document.getElementById('lineLength');
@@ -174,15 +190,14 @@
         colorElem.addEventListener('change', colorChange, false);
         canvasElem = document.getElementById('canvas');
         context = canvasElem.getContext('2d');
-        resize();
+        drawInstructions();
         reset();
-        canvasElem.addEventListener('mousedown', mouseDown, false);
-        canvasElem.addEventListener('mousemove', mouseMove, false);
-        canvasElem.addEventListener('mouseup', mouseUp, false);
-        canvasElem.addEventListener('mouseleave', mouseUp, false);
-        canvasElem.addEventListener('touchstart', mouseDown, false);
-        canvasElem.addEventListener('touchmove', mouseMove, false);
-        canvasElem.addEventListener('touchend', mouseUp, false);
-        window.addEventListener('resize', resize, false);
+        canvasElem.addEventListener('mousedown', function(e) { mouseDown(e, false); }, false);
+        canvasElem.addEventListener('mousemove', function(e) { mouseMove(e, false); }, false);
+        canvasElem.addEventListener('mouseup', function(e) { mouseUp(e, false); }, false);
+        canvasElem.addEventListener('mouseleave', function(e) { mouseUp(e, false); }, false);
+        canvasElem.addEventListener('touchstart', function(e) { mouseDown(e, true); }, false);
+        canvasElem.addEventListener('touchmove', function(e) { mouseMove(e, true); }, false);
+        canvasElem.addEventListener('touchend', function (e) { mouseUp(e, true); }, false);
     }, false);
 }());
