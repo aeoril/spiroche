@@ -2,6 +2,7 @@
 <html>
 <head>
     <title>Spiroche</title>
+    <meta name="viewport" content="width=1280, initial-scale=1" >
     <link href="spiroche.css" rel="stylesheet" type="text/css">
 </head>
 <body>
@@ -11,18 +12,18 @@
             <menuitem id="menuReset" label="Reset"></menuitem>
         </menu>
     </canvas>
-<form id="form" action="#" method="get">
-    <label for="lineLength">Line Length:</label>
-    <input type="range" id="lineLength" min="10" max="400" />
-    <label for="minimumLineSeparation">Minimum Line Separation:</label>
-    <input type="range" id="minimumLineSeparation" min="1" max="30"/>
-    <label for="angleDivisor">Angle Divisor:</label>
-    <input type="range" id="angleDivisor" min="1" max="700"/><br>
-    <input type="button" id="clear" value="Clear" />
-    <input type="button" id="reset" value="Reset" />
-    <label for="color">Color Picker:</label>
-    <input type="color" id="color" />
-</form>
-<script src="spiroche.js"></script>
+        <form id="form" action="#" method="get">
+        <label for="lineLength">Line Length:</label>
+        <input type="range" id="lineLength" min="10" max="400" />
+        <label for="minimumLineSeparation">Minimum Line Separation:</label>
+        <input type="range" id="minimumLineSeparation" min="1" max="30"/>
+        <label for="angleDivisor">Angle Divisor:</label>
+        <input type="range" id="angleDivisor" min="1" max="700"/><br>
+        <input type="button" id="clear" value="Clear" />
+        <input type="button" id="reset" value="Reset" />
+        <label for="color">Color Picker:</label>
+        <input type="color" id="color" />
+    </form>
+    <script src="spiroche.js"></script>
 </body>
 </html>
