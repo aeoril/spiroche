@@ -185,9 +185,12 @@
         clearElem.addEventListener('click', clear, false);
         resetElem.addEventListener('click', reset, false);
         lineLengthElem.addEventListener('change', lineLengthChange, false);
-        minimumLineSeparationElem.addEventListener('change', minimumLineSeparationChange, false);
-        angleDivisorElem.addEventListener('change', angleDivisorChange, false);
-        colorElem.addEventListener('change', colorChange, false);
+//        minimumLineSeparationElem.addEventListener('change', minimumLineSeparationChange, false);
+//        angleDivisorElem.addEventListener('change', angleDivisorChange, false);
+//        lineLengthElem.addEventListener('change', lineLengthChange, false);
+        minimumLineSeparationElem.addEventListener('input', minimumLineSeparationChange, false);
+        angleDivisorElem.addEventListener('input', angleDivisorChange, false);
+        colorElem.addEventListener('input', colorChange, false);
         canvasElem = document.getElementById('canvas');
         context = canvasElem.getContext('2d');
         drawInstructions();
