@@ -25,6 +25,7 @@
         angleDivisorElem,
         colorElem,
         canvasElem,
+        canvasScale,
         context,
         mouseDownPos,
         mousePos = null,
@@ -58,8 +59,8 @@
             element = element.offsetParent;
         }
         // return relative mouse position
-        mousePos.x = e.clientX - left + window.pageXOffset;
-        mousePos.y = e.clientY - top + window.pageYOffset;
+        mousePos.x = (e.clientX - left + window.pageXOffset) / canvasScale;
+        mousePos.y = (e.clientY - top + window.pageYOffset) / canvasScale;
         return mousePos;
     }
     function fromPolar(mag, angle) {
@@ -204,6 +205,11 @@
         canvasElem.addEventListener('touchend', function (e) { mouseUp(e, true); }, false);
         var outputElem = document.getElementById('output'),
             mqlOuter = window.matchMedia("(orientation: portrait)"),
+            mqlMaxWidth1680 = window.matchMedia("(max-width: 1680px)"),
+            mqlMaxWidth1280 = window.matchMedia("(max-width: 1280px)"),
+            mqlMaxWidth980 = window.matchMedia("(max-width: 980px)"),
+            mqlMaxWidth600 = window.matchMedia("(max-width: 600px)"),
+            mqlMaxWidth480 = window.matchMedia("(max-width: 480px)"),
             count = 0;
         function handleOrientationChange(mql, allowScale) {
             var viewPortMeta = document.querySelector('meta[name="viewport"]'),
@@ -215,12 +221,15 @@
                     ', minimum-scale=' + (allowScale ? .1 : scale);
             count++;
             outputElem.innerHTML = 'count: ' + count + ' mql.matches: ' + mql.matches +
+                ' Body Width: ' + document.body.clientWidth +
+                ' Canvas Width: ' + canvasElem.width + ' clientWidth: ' + canvasElem.clientWidth +
+                ' Canvas Ratio: ' + (canvasScale = canvasElem.clientWidth / canvasElem.width) +
                 ' actualScreenWidth: ' + actualScreenWidth +
                 ' screen.width: ' + screen.width + ' screen.height: ' + screen.height +
                 ' document.documentElement.clientWidth: ' + document.documentElement.clientWidth +
                 ' document.body.clientWidth: ' + document.body.clientWidth +
                 ' content: ' + content + '<br>';
-            viewPortMeta.content = content;
+            //viewPortMeta.content = content;
             mqlOuter = mql;
         }
         mqlOuter.addListener(function(mql) { handleOrientationChange(mql, false); });
@@ -229,5 +238,10 @@
         minimumLineSeparationElem.addEventListener('focus', function() {handleOrientationChange(mqlOuter, true); });
         angleDivisorElem.addEventListener('focus', function() {handleOrientationChange(mqlOuter, true); });
         handleOrientationChange(mqlOuter, false);
+        mqlMaxWidth1680.addListener(function(mql) { handleOrientationChange(mql, false); });
+        mqlMaxWidth1280.addListener(function(mql) { handleOrientationChange(mql, false); });
+        mqlMaxWidth980.addListener(function(mql) { handleOrientationChange(mql, false); });
+        mqlMaxWidth600.addListener(function(mql) { handleOrientationChange(mql, false); });
+        mqlMaxWidth480.addListener(function(mql) { handleOrientationChange(mql, false); });
     }, false);
 }());
