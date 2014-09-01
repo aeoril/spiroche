@@ -20,7 +20,10 @@ form {
 label {
     vertical-align: middle;
 }
-input[type="range"] {
+input[type="number"] {
+    width: 50px;
+}
+/*input[type="range"] {
     vertical-align: bottom;
 }
 #lineLength {
@@ -31,4 +34,4 @@ input[type="range"] {
 }
 #angleDivisor {
     width: 22%
-}
+}*/

@@ -202,5 +202,32 @@
         canvasElem.addEventListener('touchstart', function(e) { mouseDown(e, true); }, false);
         canvasElem.addEventListener('touchmove', function(e) { mouseMove(e, true); }, false);
         canvasElem.addEventListener('touchend', function (e) { mouseUp(e, true); }, false);
+        var outputElem = document.getElementById('output'),
+            mqlOuter = window.matchMedia("(orientation: portrait)"),
+            count = 0;
+        function handleOrientationChange(mql, allowScale) {
+            var viewPortMeta = document.querySelector('meta[name="viewport"]'),
+                actualScreenWidth = mql.matches ? Math.min(screen.width, screen.height) :
+                    Math.max(screen.width, screen.height),
+                scale = actualScreenWidth / document.body.clientWidth,
+                content = 'width=' + document.body.clientWidth + ', initial-scale=' + scale +
+                    ', maximum-scale=' + (allowScale ? 10 : scale) +
+                    ', minimum-scale=' + (allowScale ? .1 : scale);
+            count++;
+            outputElem.innerHTML = 'count: ' + count + ' mql.matches: ' + mql.matches +
+                ' actualScreenWidth: ' + actualScreenWidth +
+                ' screen.width: ' + screen.width + ' screen.height: ' + screen.height +
+                ' document.documentElement.clientWidth: ' + document.documentElement.clientWidth +
+                ' document.body.clientWidth: ' + document.body.clientWidth +
+                ' content: ' + content + '<br>';
+            viewPortMeta.content = content;
+            mqlOuter = mql;
+        }
+        mqlOuter.addListener(function(mql) { handleOrientationChange(mql, false); });
+        document.body.addEventListener('gesturestart', function() { handleOrientationChange(mqlOuter, true); }, false);
+        lineLengthElem.addEventListener('focus', function() { handleOrientationChange(mqlOuter, true); });
+        minimumLineSeparationElem.addEventListener('focus', function() {handleOrientationChange(mqlOuter, true); });
+        angleDivisorElem.addEventListener('focus', function() {handleOrientationChange(mqlOuter, true); });
+        handleOrientationChange(mqlOuter, false);
     }, false);
 }());

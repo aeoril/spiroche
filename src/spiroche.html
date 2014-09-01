@@ -2,7 +2,7 @@
 <html>
 <head>
     <title>Spiroche</title>
-    <meta name="viewport" content="width=1280,initial-scale=0.25">
+    <meta name="viewport" content="width=1280,initial-scale=0.5">
     <link href="spiroche.css" rel="stylesheet" type="text/css">
 </head>
 <body>
@@ -14,16 +14,17 @@
     </canvas>
         <form id="form" action="#" method="get">
         <label for="lineLength">Line Length:</label>
-        <input type="range" id="lineLength" min="10" max="400" />
+        <input type="number" id="lineLength" min="10" max="400" />
         <label for="minimumLineSeparation">Minimum Line Separation:</label>
-        <input type="range" id="minimumLineSeparation" min="1" max="30"/>
+        <input type="number" id="minimumLineSeparation" min="1" max="30"/>
         <label for="angleDivisor">Angle Divisor:</label>
-        <input type="range" id="angleDivisor" min="1" max="700"/><br>
+        <input type="number" id="angleDivisor" min="1" max="700"/>
         <input type="button" id="clear" value="Clear" />
         <input type="button" id="reset" value="Reset" />
         <label for="color">Color Picker:</label>
         <input type="color" id="color" />
-    </form>
+    </form><br>
+    <div id="output"></div>
     <script src="spiroche.js"></script>
 </body>
 </html>
