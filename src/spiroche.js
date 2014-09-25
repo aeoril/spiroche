@@ -9,29 +9,30 @@
         MINIMUM_LINE_SEPARATION = 6,
         ANGLE_DIVISOR = 300,
         BLACK='rgb(0, 0, 0)',
-        GRAY = 'rgb(100, 100, 100)',
-        FONT = 'normal 30pt "Droid Sans", sans-serif',
-        INSTRUCTIONS = 'Click and drag mouse in this space to draw',
-        lineLength,
-        minimumLineSeparation,
-        angleDivisor,
+        GRAY = 'rgb(128, 128, 128)',//'rgb(100, 100, 100)',
+        FONT = 'normal 48pt "Droid Sans", sans-serif',
+        INSTRUCTIONS = 'Drag pointer or finger here to draw',
+        length,
+        separation,
+        divisor,
         color,
+        sizeElem,
+        isSizable = false,
         menuClearElem,
         menuResetElem,
         clearElem,
         resetElem,
-        lineLengthElem,
-        minimumLineSeparationElem,
-        angleDivisorElem,
+        lengthElem,
+        separationElem,
+        divisorElem,
         colorElem,
         canvasElem,
-        canvasScale,
         context,
         mouseDownPos,
         mousePos = null,
         prevMousePos,
         mouseIsDown = false,
-        clean = true,
+        isClean = true,
         startingPointAngle;
 
     function calcDistance(point1, point2) {
@@ -43,11 +44,12 @@
     function calcMousePos(e, element, isTouch) {
         var top = 0,
             left = 0,
-            mousePos = {};
+            mousePos = {},
+            canvasScale = canvasElem.clientWidth / canvasElem.width;
 
         if (isTouch) {
-            mousePos.x = e.targetTouches[0].pageX - element.offsetLeft;
-            mousePos.y = e.targetTouches[0].pageY - element.offsetTop;
+            mousePos.x = (e.targetTouches[0].pageX - element.offsetLeft) / canvasScale;
+            mousePos.y = (e.targetTouches[0].pageY - element.offsetTop) / canvasScale;
             return mousePos;
         }
         // get canvas position
@@ -68,17 +70,46 @@
     }
     function calcPoints(stationaryPoint, point, lineLength) {
         var radius = calcDistance(stationaryPoint, point),
-            angle = Math.PI * (radius / angleDivisor),
+            angle = Math.PI * (radius / divisor),
             point1 = fromPolar(lineLength, angle),
             point2 = fromPolar(lineLength, angle + Math.PI);
 
         return {point1: {x: point.x + point1.x, y: point.y + point1.y},
             point2: {x: point.x + point2.x, y: point.y + point2.y}};
     }
+    function drawInstructions() {
+        if (isSizable) {
+            return;
+        }
+        context.save();
+        context.fillStyle = GRAY;
+        context.font = FONT;
+        context.fillText(INSTRUCTIONS, (canvasElem.width - context.measureText(INSTRUCTIONS).width) / 2,
+            canvasElem.height / 2);
+        context.restore();
+    }
+    function sizeClick() {
+        if (isSizable) {
+            isSizable = false;
+            if (isClean) {
+                drawInstructions();
+            }
+            sizeElem.value = 'Size';
+        } else {
+            isSizable = true;
+            mouseIsDown = false;
+            if (isClean) {
+                context.clearRect(0, 0, canvasElem.width, canvasElem.height);
+            }
+            sizeElem.value = 'Draw';
+        }
+    }
     function mouseMove(e, isTouch) {
         var newMousePos,
             points;
-
+        if (isSizable) {
+            return;
+        }
         if (isTouch) {
             e.preventDefault();
         }
@@ -86,7 +117,7 @@
             return;
         }
         newMousePos = calcMousePos(e, canvasElem, isTouch);
-        if (calcDistance(newMousePos, mousePos) < minimumLineSeparation) {
+        if (calcDistance(newMousePos, mousePos) < separation) {
             return;
         }
         if (mousePos) {
@@ -96,19 +127,22 @@
         mousePos.x = Math.min(mousePos.x, canvasElem.width);
         mousePos.y = Math.min(mousePos.y, canvasElem.height);
         if (prevMousePos !== null) {
-            points = calcPoints(mouseDownPos, mousePos, lineLength);
+            points = calcPoints(mouseDownPos, mousePos, length);
             context.strokeStyle = color;
             context.beginPath();
             context.moveTo(points.point1.x, points.point1.y);
             context.lineTo(points.point2.x, points.point2.y);
             context.stroke();
-            if (clean) {
-                clean = false;
+            if (isClean) {
+                isClean = false;
                 context.clearRect(0, 0, canvasElem.width, canvasElem.height);
             }
         }
     }
     function mouseDown(e, isTouch) {
+        if (isSizable) {
+            return;
+        }
         mouseDownPos = calcMousePos(e, canvasElem, isTouch);
         mouseIsDown = true;
         mousePos = mouseDownPos;
@@ -118,84 +152,64 @@
         }
     }
     function mouseUp(e, isTouch) {
+        if (isSizable) {
+            return;
+        }
         mouseIsDown = false;
         if (isTouch) {
             e.preventDefault();
         }
     }
-    function drawInstructions() {
-        context.save();
-        context.fillStyle = GRAY;
-        context.font = FONT;
-        context.fillText(INSTRUCTIONS, (canvasElem.width - context.measureText(INSTRUCTIONS).width) / 2,
-            canvasElem.height / 2);
-        context.restore();
-    }
-//    function resize() {
-//        var imageData;
-//
-//        if (clean) {
-//            canvasElem.width = window.innerWidth;
-//            canvasElem.height = window.innerHeight - divElem.offsetHeight;
-//            drawInstructions();
-//        } else {
-//            imageData = context.getImageData(0, 0, canvasElem.width, canvasElem.height);
-//            canvasElem.width = window.innerWidth;
-//            canvasElem.height = window.innerHeight - divElem.offsetHeight;
-//            context.putImageData(imageData, 0, 0);
-//        }
-//    }
     function clear() {
-        clean = true;
+        isClean = true;
         context.clearRect(0, 0, canvasElem.width, canvasElem.height);
         drawInstructions();
     }
-    function lineLengthChange() {
-        lineLength = lineLengthElem.value;
+    function lengthChange() {
+        length = lengthElem.value;
     }
-    function minimumLineSeparationChange() {
-        minimumLineSeparation = minimumLineSeparationElem.value;
+    function separationChange() {
+        separation = separationElem.value;
     }
-    function angleDivisorChange() {
-        angleDivisor = angleDivisorElem.value;
+    function divisorChange() {
+        divisor = divisorElem.value;
     }
     function colorChange() {
         color = colorElem.value;
     }
     function reset() {
-        lineLengthElem.value = LINE_LENGTH;
-        minimumLineSeparationElem.value = MINIMUM_LINE_SEPARATION;
-        angleDivisorElem.value = ANGLE_DIVISOR;
+        lengthElem.value = LINE_LENGTH;
+        separationElem.value = MINIMUM_LINE_SEPARATION;
+        divisorElem.value = ANGLE_DIVISOR;
         colorElem.value = BLACK;
-        lineLengthChange();
-        minimumLineSeparationChange();
-        angleDivisorChange();
+        lengthChange();
+        separationChange();
+        divisorChange();
         colorChange();
     }
     window.addEventListener('load', function () {
+        sizeElem = document.getElementById('size');
         menuClearElem = document.getElementById('menuClear');
         menuResetElem = document.getElementById('menuReset');
         clearElem = document.getElementById('clear');
         resetElem = document.getElementById('reset');
-        lineLengthElem = document.getElementById('lineLength');
-        minimumLineSeparationElem = document.getElementById('minimumLineSeparation');
-        angleDivisorElem = document.getElementById('angleDivisor');
+        lengthElem = document.getElementById('length');
+        separationElem = document.getElementById('separation');
+        divisorElem = document.getElementById('divisor');
         menuClearElem.addEventListener('click', clear, false);
         menuResetElem.addEventListener('click', reset, false);
         colorElem = document.getElementById('color');
-        clearElem.addEventListener('click', clear, false);
-        resetElem.addEventListener('click', reset, false);
-        lineLengthElem.addEventListener('change', lineLengthChange, false);
-//        minimumLineSeparationElem.addEventListener('change', minimumLineSeparationChange, false);
-//        angleDivisorElem.addEventListener('change', angleDivisorChange, false);
-//        lineLengthElem.addEventListener('change', lineLengthChange, false);
-        minimumLineSeparationElem.addEventListener('input', minimumLineSeparationChange, false);
-        angleDivisorElem.addEventListener('input', angleDivisorChange, false);
-        colorElem.addEventListener('input', colorChange, false);
         canvasElem = document.getElementById('canvas');
         context = canvasElem.getContext('2d');
         drawInstructions();
         reset();
+        sizeElem.addEventListener('click', sizeClick, false);
+        clearElem.addEventListener('click', clear, false);
+        resetElem.addEventListener('click', reset, false);
+        lengthElem.addEventListener('change', lengthChange, false);
+        separationElem.addEventListener('input', separationChange, false);
+        divisorElem.addEventListener('input', divisorChange, false);
+        colorElem.addEventListener('input', colorChange, false);
         canvasElem.addEventListener('mousedown', function(e) { mouseDown(e, false); }, false);
         canvasElem.addEventListener('mousemove', function(e) { mouseMove(e, false); }, false);
         canvasElem.addEventListener('mouseup', function(e) { mouseUp(e, false); }, false);
@@ -203,45 +217,5 @@
         canvasElem.addEventListener('touchstart', function(e) { mouseDown(e, true); }, false);
         canvasElem.addEventListener('touchmove', function(e) { mouseMove(e, true); }, false);
         canvasElem.addEventListener('touchend', function (e) { mouseUp(e, true); }, false);
-        var outputElem = document.getElementById('output'),
-            mqlOuter = window.matchMedia("(orientation: portrait)"),
-            mqlMaxWidth1680 = window.matchMedia("(max-width: 1680px)"),
-            mqlMaxWidth1280 = window.matchMedia("(max-width: 1280px)"),
-            mqlMaxWidth980 = window.matchMedia("(max-width: 980px)"),
-            mqlMaxWidth600 = window.matchMedia("(max-width: 600px)"),
-            mqlMaxWidth480 = window.matchMedia("(max-width: 480px)"),
-            count = 0;
-        function handleOrientationChange(mql, allowScale) {
-            var viewPortMeta = document.querySelector('meta[name="viewport"]'),
-                actualScreenWidth = mql.matches ? Math.min(screen.width, screen.height) :
-                    Math.max(screen.width, screen.height),
-                scale = actualScreenWidth / document.body.clientWidth,
-                content = 'width=' + document.body.clientWidth + ', initial-scale=' + scale +
-                    ', maximum-scale=' + (allowScale ? 10 : scale) +
-                    ', minimum-scale=' + (allowScale ? .1 : scale);
-            count++;
-            outputElem.innerHTML = 'count: ' + count + ' mql.matches: ' + mql.matches +
-                ' Body Width: ' + document.body.clientWidth +
-                ' Canvas Width: ' + canvasElem.width + ' clientWidth: ' + canvasElem.clientWidth +
-                ' Canvas Ratio: ' + (canvasScale = canvasElem.clientWidth / canvasElem.width) +
-                ' actualScreenWidth: ' + actualScreenWidth +
-                ' screen.width: ' + screen.width + ' screen.height: ' + screen.height +
-                ' document.documentElement.clientWidth: ' + document.documentElement.clientWidth +
-                ' document.body.clientWidth: ' + document.body.clientWidth +
-                ' content: ' + content + '<br>';
-            //viewPortMeta.content = content;
-            mqlOuter = mql;
-        }
-        mqlOuter.addListener(function(mql) { handleOrientationChange(mql, false); });
-        document.body.addEventListener('gesturestart', function() { handleOrientationChange(mqlOuter, true); }, false);
-        lineLengthElem.addEventListener('focus', function() { handleOrientationChange(mqlOuter, true); });
-        minimumLineSeparationElem.addEventListener('focus', function() {handleOrientationChange(mqlOuter, true); });
-        angleDivisorElem.addEventListener('focus', function() {handleOrientationChange(mqlOuter, true); });
-        handleOrientationChange(mqlOuter, false);
-        mqlMaxWidth1680.addListener(function(mql) { handleOrientationChange(mql, false); });
-        mqlMaxWidth1280.addListener(function(mql) { handleOrientationChange(mql, false); });
-        mqlMaxWidth980.addListener(function(mql) { handleOrientationChange(mql, false); });
-        mqlMaxWidth600.addListener(function(mql) { handleOrientationChange(mql, false); });
-        mqlMaxWidth480.addListener(function(mql) { handleOrientationChange(mql, false); });
     }, false);
 }());
