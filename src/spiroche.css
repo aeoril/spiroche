@@ -1,51 +1,45 @@
-/*html, body {
-    width: 100%;
-    height: 100%;
-    margin: 0px;
-    padding: 0px;
-    overflow: hidden;
-}*/
-html, body {
-    padding: 0px;
-    margin: 0px;
-}
+html,
 body {
-    padding-top: 10px;
-    /*width: 2560px;*/
-    /*width: 100%;*/
-    margin: auto;
-    text-align: center;
-    font: normal 28pt "Droid Sans", sans-serif;
-    color: #646464;
-    /*transition: 2s ease-out;
-    -moz-transition: 2s ease-out;
-    -ms-transition: 2s ease-out;
-    -webkit-transition: 2s ease-out;
-    -o-transition: 2s ease-out;*/
+  padding: 0;
+  margin: 0;
 }
+
+body {
+  padding-top: 10px;
+  margin: auto;
+  text-align: center;
+  font: normal 28pt "Droid Sans", sans-serif;
+  color: #646464;
+}
+
 canvas {
-    border: solid 2px #646464;
-    width: 90%
+  border: solid 2px #646464;
+  width: 90%;
 }
+
 form {
-    padding: 10px;
-    width: 100%;
+  padding: 10px;
+  width: 100%;
 }
+
 label {
-    vertical-align: middle;
-    color: #646464;
+  vertical-align: middle;
+  color: #646464;
 }
+
 input {
-    font: normal 20pt "Droid Sans", sans-serif;
-    color: #646464;
+  font: normal 20pt "Droid Sans", sans-serif;
+  color: #646464;
 }
+
 #size {
-    position: fixed;
-    top: 10px;
-    left: 0;
-    font: normal 28pt "Droid Sans", sans-serif;
-    opacity: 0.5;
+  position: fixed;
+  top: 10px;
+  left: 0;
+  font: normal 28pt "Droid Sans", sans-serif;
+  opacity: 0.5;
 }
+
 .nowrap {
-    white-space: nowrap;
+  white-space: nowrap;
 }

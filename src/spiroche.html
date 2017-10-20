@@ -1,38 +1,38 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Spiroche</title>
-    <link href="spiroche.css" rel="stylesheet" type="text/css">
+  <title>Spiroche</title>
+  <link href="spiroche.css" rel="stylesheet" type="text/css">
 </head>
 <body>
-    <canvas id="canvas" contextmenu="canvasMenu" width="1920px" height="600px">
-        <menu id="canvasMenu" type="context">
-            <menuitem id="menuClear" label="Clear"></menuitem>
-            <menuitem id="menuReset" label="Reset"></menuitem>
-        </menu>
-    </canvas>
-    <input type="button" id="size" value="Size">
-    <form id="form" action="#" method="get">
-        <input type="button" id="clear" value="Clear" />
-        <input type="button" id="reset" value="Reset" />
-        <span class="nowrap">
-            <label for="color">Color:</label>
-            <input type="color" id="color" /><br>
-        </span>
-        <span class="nowrap">
-            <label for="length">Length:</label>
-            <input type="number" id="length" min="10" max="400" />
-        </span>
-        <span class="nowrap">
-            <label for="separation">Separation:</label>
-            <input type="number" id="separation" min="1" max="30"/>
-        </span>
-        <span class="nowrap">
-            <label for="divisor">Divisor:</label>
-            <input type="number" id="divisor" min="1" max="700"/>
-        </span>
-    </form><br>
-    <div id="output"></div>
-    <script src="spiroche.js"></script>
+  <canvas id="canvas" contextmenu="canvasMenu" width="1920px" height="600px">
+    <menu id="canvasMenu" type="context">
+      <menuitem id="menuClear" label="Clear"></menuitem>
+      <menuitem id="menuReset" label="Reset"></menuitem>
+    </menu>
+  </canvas>
+  <input type="button" id="size" value="Size">
+  <form id="form" action="#" method="get">
+    <input type="button" id="clear" value="Clear" />
+    <input type="button" id="reset" value="Reset" />
+    <span class="nowrap">
+      <label for="color">Color:</label>
+      <input type="color" id="color" /><br>
+    </span>
+    <span class="nowrap">
+      <label for="length">Length:</label>
+      <input type="number" id="length" min="10" max="400" />
+    </span>
+    <span class="nowrap">
+      <label for="separation">Separation:</label>
+      <input type="number" id="separation" min="1" max="30"/>
+    </span>
+    <span class="nowrap">
+      <label for="divisor">Divisor:</label>
+      <input type="number" id="divisor" min="1" max="700"/>
+    </span>
+  </form><br>
+  <div id="output"></div>
+  <script src="spiroche.js"></script>
 </body>
 </html>

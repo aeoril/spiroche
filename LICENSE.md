@@ -2,7 +2,7 @@ From [http://opensource.org/licenses/MIT](http://opensource.org/licenses/MIT)
 
 #The MIT License (MIT)
 
-####Copyright &copy; 2014 QuarksCode
+####Copyright &copy; 2017 IC3 Dimensions
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
