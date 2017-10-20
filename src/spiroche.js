@@ -6,28 +6,20 @@
 
   'use strict';
 
-  var LINE_LENGTH = 200;
+  var LINE_LENGTH = 120;
   var MINIMUM_LINE_SEPARATION = 6;
 
   var ANGLE_DIVISOR = 300;
 
-  var BLACK='rgb(0, 0, 0)';
-  var GRAY = 'rgb(128, 128, 128)';//'rgb(100, 100, 100)',
+  var CANVAS_WIDTH_PERCENTAGE = 100;
+  var CANVAS_HEIGHT_PERCENTAGE = 80;
 
-  var FONT = 'normal 48pt "Droid Sans", sans-serif';
-
-  var INSTRUCTIONS = 'Drag pointer or finger here to draw';
+  var HOT_PINK = '#ff69b4';
 
   var length;
   var separation;
   var divisor;
   var color;
-
-  var sizeElem;
-  var isSizable = false;
-
-  var menuClearElem;
-  var menuResetElem;
 
   var clearElem;
   var resetElem;
@@ -40,12 +32,41 @@
   var canvasElem;
   var context;
 
+  var instructionsElem;
+
   var mouseDownPos;
   var mousePos = null;
   var prevMousePos;
   var mouseIsDown = false;
 
   var isClean = true;
+
+  function showInstructions (show) {
+    if (show) {
+      instructionsElem.style.display = 'none';
+    } else {
+      instructionsElem.style.display = 'block';
+    }
+  }
+
+  function resize (ctx, percentX, percentY) {
+
+    var realToCSSPixels = window.devicePixelRatio;
+
+    var displayWidth  = Math.floor(ctx.canvas.clientWidth * realToCSSPixels);
+    var displayHeight = Math.floor(ctx.canvas.clientHeight * realToCSSPixels);
+
+    if (ctx.canvas.width !== displayWidth ||
+        ctx.canvas.height !== displayHeight) {
+
+      ctx.canvas.width  = displayWidth;
+      ctx.canvas.height = displayHeight;
+
+      return true;
+    }
+
+    return false;
+  }
 
   function calcDistance(point1, point2) {
 
@@ -62,11 +83,12 @@
 
     var mousePos = {};
 
-    var canvasScale = canvasElem.clientWidth / canvasElem.width;
+    var canvasScaleX = canvasElem.clientWidth / canvasElem.width;
+    var canvasScaleY = canvasElem.clientHeight / canvasElem.height;
 
     if (isTouch) {
-      mousePos.x = (e.targetTouches[0].pageX - element.offsetLeft) / canvasScale;
-      mousePos.y = (e.targetTouches[0].pageY - element.offsetTop) / canvasScale;
+      mousePos.x = (e.targetTouches[0].pageX - element.offsetLeft) / canvasScaleX;
+      mousePos.y = (e.targetTouches[0].pageY - element.offsetTop) / canvasScaleY;
 
       return mousePos;
     }
@@ -80,8 +102,8 @@
     }
 
     // return relative mouse position
-    mousePos.x = (e.clientX - left + window.pageXOffset) / canvasScale;
-    mousePos.y = (e.clientY - top + window.pageYOffset) / canvasScale;
+    mousePos.x = (e.clientX - left + window.pageXOffset) / canvasScaleX;
+    mousePos.y = (e.clientY - top + window.pageYOffset) / canvasScaleY;
 
     return mousePos;
 
@@ -107,56 +129,10 @@
     };
   }
 
-  function drawInstructions() {
-
-    if (isSizable) {
-      return;
-    }
-
-    context.save();
-
-    context.fillStyle = GRAY;
-    context.font = FONT;
-
-    context.fillText(INSTRUCTIONS, (canvasElem.width - context.measureText(INSTRUCTIONS).width) / 2,
-        canvasElem.height / 2);
-
-    context.restore();
-  }
-
-  function sizeClick() {
-
-    if (isSizable) {
-
-      isSizable = false;
-
-      if (isClean) {
-        drawInstructions();
-      }
-
-      sizeElem.value = 'Size';
-
-    } else {
-
-      isSizable = true;
-      mouseIsDown = false;
-
-      if (isClean) {
-        context.clearRect(0, 0, canvasElem.width, canvasElem.height);
-      }
-
-      sizeElem.value = 'Draw';
-    }
-  }
-
   function mouseMove(e, isTouch) {
 
     var newMousePos;
     var points;
-
-    if (isSizable) {
-      return;
-    }
 
     if (isTouch) {
       e.preventDefault();
@@ -183,6 +159,8 @@
 
     if (prevMousePos !== null) {
 
+      showInstructions(false);
+
       points = calcPoints(mouseDownPos, mousePos, length);
 
       context.strokeStyle = color;
@@ -202,10 +180,6 @@
 
   function mouseDown(e, isTouch) {
 
-    if (isSizable) {
-      return;
-    }
-
     mouseDownPos = calcMousePos(e, canvasElem, isTouch);
     mouseIsDown = true;
     mousePos = mouseDownPos;
@@ -216,10 +190,6 @@
   }
 
   function mouseUp(e, isTouch) {
-
-    if (isSizable) {
-      return;
-    }
 
     mouseIsDown = false;
 
@@ -234,7 +204,7 @@
 
     context.clearRect(0, 0, canvasElem.width, canvasElem.height);
 
-    drawInstructions();
+    showInstructions(true);
   }
 
   function lengthChange() {
@@ -258,7 +228,7 @@
     lengthElem.value = LINE_LENGTH;
     separationElem.value = MINIMUM_LINE_SEPARATION;
     divisorElem.value = ANGLE_DIVISOR;
-    colorElem.value = BLACK;
+    colorElem.value = HOT_PINK;
 
     lengthChange();
     separationChange();
@@ -266,11 +236,6 @@
     colorChange();
   }
   window.addEventListener('load', function () {
-
-    sizeElem = document.getElementById('size');
-
-    menuClearElem = document.getElementById('menuClear');
-    menuResetElem = document.getElementById('menuReset');
 
     clearElem = document.getElementById('clear');
     resetElem = document.getElementById('reset');
@@ -280,19 +245,19 @@
     separationElem = document.getElementById('separation');
     divisorElem = document.getElementById('divisor');
 
-    menuClearElem.addEventListener('click', clear, false);
-    menuResetElem.addEventListener('click', reset, false);
-
     colorElem = document.getElementById('color');
 
     canvasElem = document.getElementById('canvas');
     context = canvasElem.getContext('2d');
 
-    drawInstructions();
+    instructionsElem = document.getElementById('instructions');
 
     reset();
 
-    sizeElem.addEventListener('click', sizeClick, false);
+    window.addEventListener('resize', function () {
+      resize(context, CANVAS_WIDTH_PERCENTAGE, CANVAS_HEIGHT_PERCENTAGE);
+    });
+
     clearElem.addEventListener('click', clear, false);
     resetElem.addEventListener('click', reset, false);
 

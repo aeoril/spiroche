@@ -2,16 +2,13 @@
 <html>
 <head>
   <title>Spiroche</title>
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1.0">
   <link href="spiroche.css" rel="stylesheet" type="text/css">
 </head>
 <body>
-  <canvas id="canvas" contextmenu="canvasMenu" width="1920px" height="600px">
-    <menu id="canvasMenu" type="context">
-      <menuitem id="menuClear" label="Clear"></menuitem>
-      <menuitem id="menuReset" label="Reset"></menuitem>
-    </menu>
+  <canvas id="canvas" width="1920px" height="600px">
+    <div id="instructions">Click and drag with finger or mouse here</div>
   </canvas>
-  <input type="button" id="size" value="Size">
   <form id="form" action="#" method="get">
     <input type="button" id="clear" value="Clear" />
     <input type="button" id="reset" value="Reset" />

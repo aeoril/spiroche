@@ -8,13 +8,14 @@ body {
   padding-top: 10px;
   margin: auto;
   text-align: center;
-  font: normal 28pt "Droid Sans", sans-serif;
+  font: normal 3vw "Droid Sans", sans-serif;
   color: #646464;
 }
 
 canvas {
   border: solid 2px #646464;
-  width: 90%;
+  width: 90vw;
+  height: 80vh;
 }
 
 form {
@@ -28,16 +29,16 @@ label {
 }
 
 input {
-  font: normal 20pt "Droid Sans", sans-serif;
+  font: normal 3.5vw "Droid Sans", sans-serif;
+  width: 12vw;
   color: #646464;
 }
 
-#size {
-  position: fixed;
-  top: 10px;
-  left: 0;
-  font: normal 28pt "Droid Sans", sans-serif;
-  opacity: 0.5;
+#instructions {
+  display: relative;
+  font-size: 5vw;
+  font-family: sans-serif;
+  color: #aaa;
 }
 
 .nowrap {
