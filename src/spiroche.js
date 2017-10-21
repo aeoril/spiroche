@@ -78,6 +78,8 @@
 
   function resize (ctx) {
 
+    var imageData;
+
     var realToCSSPixels = window.devicePixelRatio;
 
     var displayWidth  = Math.floor(ctx.canvas.clientWidth * realToCSSPixels);
@@ -85,6 +87,10 @@
 
     if (ctx.canvas.width !== displayWidth ||
         ctx.canvas.height !== displayHeight) {
+
+      if (!isClean) {
+        imageData = context.getImageData(0, 0, ctx.canvas.clientWidth, ctx.canvas.clientHeight);
+      }
 
       ctx.canvas.width  = displayWidth;
       ctx.canvas.height = displayHeight;
@@ -95,7 +101,12 @@
       backgroundElem.style.width = clearElem.clientWidth + 'px';
       backgroundElem.style.height = clearElem.clientHeight + 'px';
 
-      showInstructions(true);
+      if (isClean) {
+        showInstructions(true);
+      } else {
+        showInstructions(false);
+        context.putImageData(imageData, 0, 0);
+      }
 
       return true;
     }
