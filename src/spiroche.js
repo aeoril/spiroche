@@ -11,7 +11,7 @@
 
   var ANGLE_DIVISOR = 300;
 
-  var HOT_PINK = '#ff69b4';
+  var FUCHSIA = '#ff00ff';
   var BLACK = '#000000';
 
   var length;
@@ -292,7 +292,7 @@
     lengthElem.value = LINE_LENGTH;
     separationElem.value = MINIMUM_LINE_SEPARATION;
     divisorElem.value = ANGLE_DIVISOR;
-    colorElem.value = HOT_PINK;
+    colorElem.value = FUCHSIA;
     backgroundElem.value = BLACK;
 
     lengthChange();
