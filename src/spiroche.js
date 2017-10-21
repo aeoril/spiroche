@@ -39,6 +39,7 @@
   var mouseIsDown = false;
 
   var isClean = true;
+  var inhibitResize = false;
 
   function showInstructions (show) {
 
@@ -84,6 +85,10 @@
 
     var displayWidth  = Math.floor(ctx.canvas.clientWidth * realToCSSPixels);
     var displayHeight = Math.floor(ctx.canvas.clientHeight * realToCSSPixels);
+
+    if (inhibitResize) {
+      return;
+    }
 
     if (ctx.canvas.width !== displayWidth ||
         ctx.canvas.height !== displayHeight) {
@@ -274,6 +279,14 @@
     showInstructions(isClean);
   }
 
+  function numberFocus () {
+    inhibitResize = true;
+  }
+
+  function numberBlur () {
+    inhibitResize = false;
+  }
+
   function reset() {
 
     lengthElem.value = LINE_LENGTH;
@@ -324,6 +337,15 @@
     divisorElem.addEventListener('input', divisorChange, false);
     colorElem.addEventListener('input', colorChange, false);
     backgroundElem.addEventListener('input', backgroundChange, false);
+
+    lengthElem.addEventListener('focus', numberFocus, false);
+    lengthElem.addEventListener('blur', numberBlur, false);
+
+    separationElem.addEventListener('focus', numberFocus, false);
+    separationElem.addEventListener('blur', numberBlur, false);
+
+    divisorElem.addEventListener('focus', numberFocus, false);
+    divisorElem.addEventListener('blur', numberBlur, false);
 
     canvasElem.addEventListener('mousedown', function(e) { mouseDown(e, false); }, false);
     canvasElem.addEventListener('mousemove', function(e) { mouseMove(e, false); }, false);
