@@ -11,10 +11,8 @@
 
   var ANGLE_DIVISOR = 300;
 
-  var CANVAS_WIDTH_PERCENTAGE = 100;
-  var CANVAS_HEIGHT_PERCENTAGE = 80;
-
   var HOT_PINK = '#ff69b4';
+  var BLACK = '#000000';
 
   var length;
   var separation;
@@ -28,6 +26,7 @@
   var separationElem;
   var divisorElem;
   var colorElem;
+  var backgroundElem;
 
   var canvasElem;
   var context;
@@ -42,14 +41,42 @@
   var isClean = true;
 
   function showInstructions (show) {
+
+    var rb;
+    var bb;
+    var gb;
+
+    var background;
+
     if (show) {
-      instructionsElem.style.display = 'none';
-    } else {
       instructionsElem.style.display = 'block';
+
+      background = backgroundElem.value;
+
+      rb = parseInt(background.slice(1, 3), 16);
+      gb = parseInt(background.slice(3, 5), 16);
+      bb = parseInt(background.slice(5, 7), 16);
+
+      rb = (~rb) & 255;
+      gb = (~gb) & 255;
+      bb = (~bb) & 255;
+
+      rb = rb.toString(16);
+      gb = gb.toString(16);
+      bb = bb.toString(16);
+
+      rb = rb.length === 1 ? '0' + rb : '' + rb;
+      gb = gb.length === 1 ? '0' + gb : '' + gb;
+      bb = bb.length === 1 ? '0' + bb : '' + bb;
+
+      instructionsElem.style.color = '#' + rb + gb + bb;
+
+    } else {
+      instructionsElem.style.display = 'none';
     }
   }
 
-  function resize (ctx, percentX, percentY) {
+  function resize (ctx) {
 
     var realToCSSPixels = window.devicePixelRatio;
 
@@ -61,6 +88,14 @@
 
       ctx.canvas.width  = displayWidth;
       ctx.canvas.height = displayHeight;
+
+      colorElem.style.width = clearElem.clientWidth + 'px';
+      colorElem.style.height = clearElem.clientHeight + 'px';
+
+      backgroundElem.style.width = clearElem.clientWidth + 'px';
+      backgroundElem.style.height = clearElem.clientHeight + 'px';
+
+      showInstructions(true);
 
       return true;
     }
@@ -223,18 +258,28 @@
     color = colorElem.value;
   }
 
+  function backgroundChange() {
+    canvasElem.style.backgroundColor = backgroundElem.value;
+    showInstructions(isClean);
+  }
+
   function reset() {
 
     lengthElem.value = LINE_LENGTH;
     separationElem.value = MINIMUM_LINE_SEPARATION;
     divisorElem.value = ANGLE_DIVISOR;
     colorElem.value = HOT_PINK;
+    backgroundElem.value = BLACK;
 
     lengthChange();
     separationChange();
     divisorChange();
     colorChange();
+    backgroundChange();
+
+    resize(context);
   }
+
   window.addEventListener('load', function () {
 
     clearElem = document.getElementById('clear');
@@ -246,6 +291,7 @@
     divisorElem = document.getElementById('divisor');
 
     colorElem = document.getElementById('color');
+    backgroundElem = document.getElementById('background');
 
     canvasElem = document.getElementById('canvas');
     context = canvasElem.getContext('2d');
@@ -255,7 +301,7 @@
     reset();
 
     window.addEventListener('resize', function () {
-      resize(context, CANVAS_WIDTH_PERCENTAGE, CANVAS_HEIGHT_PERCENTAGE);
+      resize(context);
     });
 
     clearElem.addEventListener('click', clear, false);
@@ -266,6 +312,7 @@
     separationElem.addEventListener('input', separationChange, false);
     divisorElem.addEventListener('input', divisorChange, false);
     colorElem.addEventListener('input', colorChange, false);
+    backgroundElem.addEventListener('input', backgroundChange, false);
 
     canvasElem.addEventListener('mousedown', function(e) { mouseDown(e, false); }, false);
     canvasElem.addEventListener('mousemove', function(e) { mouseMove(e, false); }, false);

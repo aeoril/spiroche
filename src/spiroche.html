@@ -6,28 +6,27 @@
   <link href="spiroche.css" rel="stylesheet" type="text/css">
 </head>
 <body>
-  <canvas id="canvas" width="1920px" height="600px">
+  <div class="canvasContainer">
+    <canvas id="canvas" width="1024" height="768"></canvas>
     <div id="instructions">Click and drag with finger or mouse here</div>
-  </canvas>
+  </div>
   <form id="form" action="#" method="get">
-    <input type="button" id="clear" value="Clear" />
-    <input type="button" id="reset" value="Reset" />
-    <span class="nowrap">
+    <div class="separateBelow">
+      <input type="button" id="clear" value="Clear" />
+      <input type="button" id="reset" value="Reset" />
       <label for="color">Color:</label>
-      <input type="color" id="color" /><br>
-    </span>
-    <span class="nowrap">
+      <input type="color" id="color" />
+      <label for="background">Background:</label>
+      <input type="color" id="background" />
+    </div>
+    <div>
       <label for="length">Length:</label>
       <input type="number" id="length" min="10" max="400" />
-    </span>
-    <span class="nowrap">
       <label for="separation">Separation:</label>
       <input type="number" id="separation" min="1" max="30"/>
-    </span>
-    <span class="nowrap">
       <label for="divisor">Divisor:</label>
       <input type="number" id="divisor" min="1" max="700"/>
-    </span>
+    </div>
   </form><br>
   <div id="output"></div>
   <script src="spiroche.js"></script>

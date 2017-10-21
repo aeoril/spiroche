@@ -5,22 +5,35 @@ body {
 }
 
 body {
-  padding-top: 10px;
-  margin: auto;
+  padding-top: 1vh;
   text-align: center;
   font: normal 3vw "Droid Sans", sans-serif;
   color: #646464;
 }
 
-canvas {
-  border: solid 2px #646464;
+.canvasContainer {
+  text-align: center;
+  margin: auto;
   width: 90vw;
-  height: 80vh;
+  height: 70vh;
+  margin-bottom: 15px;
 }
 
-form {
-  padding: 10px;
+canvas {
+  position: relative;
+  border: solid 2px #646464;
   width: 100%;
+  height: 100%;
+  background-color: #000;
+}
+
+#instructions {
+  position: absolute;
+  top: 32vh;
+  left: 23vw;
+  font-size: 3vw;
+  font-family: sans-serif;
+  color: #000;
 }
 
 label {
@@ -30,17 +43,13 @@ label {
 
 input {
   font: normal 3.5vw "Droid Sans", sans-serif;
-  width: 12vw;
   color: #646464;
 }
 
-#instructions {
-  display: relative;
-  font-size: 5vw;
-  font-family: sans-serif;
-  color: #aaa;
+input[type='number'] {
+  width: 12vw;
 }
 
-.nowrap {
-  white-space: nowrap;
+.separateBelow {
+  margin-bottom: 10px;
 }
