@@ -44,6 +44,7 @@
   function invertHexColor (color) {
 
     function invert (byteStr) {
+      
       var inv;
       var c = parseInt(byteStr, 16);
       var quadrant = Math.floor(c / 64);
