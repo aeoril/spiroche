@@ -44,9 +44,28 @@
   function invertHexColor (color) {
 
     function invert (byteStr) {
-      var inv = (255 - parseInt(byteStr, 16)).toString(16);
+      var inv;
+      var c = parseInt(byteStr, 16);
+      var quadrant = Math.floor(c / 64);
 
-      return byteStr.length === 1 ? '0' + inv : inv;
+      switch (quadrant) {
+      case 0 :
+      case 3 :
+        inv = 255 - c;
+        break;
+      case 1 :
+        inv = 128 + c;
+        break;
+      case 2 :
+        inv = c - 128;
+        break;
+      default :
+        inv = 0;
+        break;
+      }
+
+      inv = inv.toString(16);
+      return inv.length === 1 ? '0' + inv : inv;
     }
 
     color = color.slice(1);
