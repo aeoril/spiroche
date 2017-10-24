@@ -41,37 +41,34 @@
   var isClean = true;
   var inhibitResize = false;
 
+  function invertHexColor (color) {
+
+    function invert (byteStr) {
+      var inv = (255 - parseInt(byteStr, 16)).toString(16);
+
+      return byteStr.length === 1 ? '0' + inv : inv;
+    }
+
+    color = color.slice(1);
+
+    if (color.length === 3) {
+      // convert rgb to rrggbb
+      color = color[0] + color[0] + color[1] + color[1] + color[2] + color[2];
+    }
+
+    var r = invert(color.slice(0, 2));
+    var g = invert(color.slice(2, 4));
+    var b = invert(color.slice(4, 6));
+
+    return '#' + r + g + b;
+  }
+
   function showInstructions (show) {
 
-    var rb;
-    var bb;
-    var gb;
-
-    var background;
-
     if (show) {
+      instructionsElem.style.color = invertHexColor(backgroundElem.value);
+
       instructionsElem.style.display = 'block';
-
-      background = backgroundElem.value;
-
-      rb = parseInt(background.slice(1, 3), 16);
-      gb = parseInt(background.slice(3, 5), 16);
-      bb = parseInt(background.slice(5, 7), 16);
-
-      rb = (~rb) & 255;
-      gb = (~gb) & 255;
-      bb = (~bb) & 255;
-
-      rb = rb.toString(16);
-      gb = gb.toString(16);
-      bb = bb.toString(16);
-
-      rb = rb.length === 1 ? '0' + rb : '' + rb;
-      gb = gb.length === 1 ? '0' + gb : '' + gb;
-      bb = bb.length === 1 ? '0' + bb : '' + bb;
-
-      instructionsElem.style.color = '#' + rb + gb + bb;
-
     } else {
       instructionsElem.style.display = 'none';
     }
