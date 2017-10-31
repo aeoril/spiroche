@@ -41,34 +41,36 @@
   var isClean = true;
   var inhibitResize = false;
 
-  function invertHexColor (color) {
+  function calcOppositeHexColor (color) {
 
-    function invert (byteStr) {
+    function opposite (byteStr) {
 
-      var inv;
+      var opp;
       var c = parseInt(byteStr, 16);
       var quadrant = Math.floor(c / 64);
 
       switch (quadrant) {
       case 0 :
       case 3 :
-        inv = 255 - c;
+        opp = 255 - c;
         break;
       case 1 :
-        inv = 128 + c;
+        opp = 128 + c;
         break;
       case 2 :
-        inv = c - 128;
+        opp = c - 128;
         break;
       default :
-        inv = 0;
+        opp = 0;
         break;
       }
 
-      inv = inv.toString(16);
-      return inv.length === 1 ? '0' + inv : inv;
+      opp = opp.toString(16);
+      
+      return opp.length === 1 ? '0' + opp : opp;
     }
 
+    // slice off initial #
     color = color.slice(1);
 
     if (color.length === 3) {
@@ -76,9 +78,10 @@
       color = color[0] + color[0] + color[1] + color[1] + color[2] + color[2];
     }
 
-    var r = invert(color.slice(0, 2));
-    var g = invert(color.slice(2, 4));
-    var b = invert(color.slice(4, 6));
+    // calculate opposite colors
+    var r = opposite(color.slice(0, 2));
+    var g = opposite(color.slice(2, 4));
+    var b = opposite(color.slice(4, 6));
 
     return '#' + r + g + b;
   }
@@ -86,7 +89,7 @@
   function showInstructions (show) {
 
     if (show) {
-      instructionsElem.style.color = invertHexColor(backgroundElem.value);
+      instructionsElem.style.color = calcOppositeHexColor(backgroundElem.value);
 
       instructionsElem.style.display = 'block';
     } else {
