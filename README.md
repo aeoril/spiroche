@@ -8,4 +8,6 @@ Click on the link below to start Spiroche
 Use the pointer or finger to make multi-colored graphics.  Spiral action
 produces spider-web like graphics. Implemented using HTML5, CSS3 and JavaScript.
 
+![Screenshot](./spiroche-screenshot.png)
+
 [spiroche]: https://xitalogy.github.io/spiroche/src/spiroche.html
