@@ -1,4 +1,4 @@
-// Copyright © 2019 by Xitalogy.  MIT License.  See LICENSE.MD
+// Copyright © 2019 by Xitalogy.  MIT License.  http://opensource.org/licenses/MIT
 
 (function() {
 
